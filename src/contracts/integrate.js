@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 
 const INFURA_ID = import.meta.env.VITE_INFURA_API_KEY;
-const address = 0xD31E06B76C3bc37cc0C0328835881096Ee8E51ad;
+const address = "0xD31E06B76C3bc37cc0C0328835881096Ee8E51ad";
 
 const ERC20_ABI = [
     "function transfer(address _to, uint256 _value) external returns (bool)",

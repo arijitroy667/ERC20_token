@@ -90,6 +90,7 @@ function AppContent() {
   const { account } = useWallet();
   const [activeSection, setActiveSection] = useState(null);
   const [formData, setFormData] = useState({ amount: "", address: "" });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -103,7 +104,12 @@ function AppContent() {
     }
 
     try {
-      console.log(`Submitting ${activeSection} action with`, formData);
+      setIsLoading(true);
+      console.log(`Submitting ${activeSection} action with:`, {
+        account,
+        amount: formData.amount,
+        address: formData.address
+      });
       switch (activeSection) {
         case "Mint":
           await mint(account, formData.amount);
@@ -119,9 +125,12 @@ function AppContent() {
       }
       setFormData({ amount: "", address: "" });
       setActiveSection(null);
+      alert("Transaction successful!");
     } catch (error) {
       console.error("Transaction failed:", error);
-      alert("Transaction failed. Check console for details.");
+      alert(`Transaction failed: ${error.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 

@@ -48,7 +48,7 @@ async function burn(amount){
     return tx;
 }
 
-async function transfer(account,account2,value){
+async function transfer(from,to,amount){
     if (!from) throw new Error("From address is required");
     if (!to) throw new Error("To address is required");
     if (!amount) throw new Error("Amount is required");
@@ -67,7 +67,7 @@ async function transfer(account,account2,value){
         await approveTx.wait();
         
         // Then do the transfer
-        const transferTx = await contract.transfer(to, amountInWei);
+        const transferTx = await contract.transferFrom(from,to, amountInWei);
         await transferTx.wait();
         
         return transferTx;

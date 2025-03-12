@@ -53,11 +53,28 @@ async function transfer(account,account2,value){
     if (!to) throw new Error("To address is required");
     if (!amount) throw new Error("Amount is required");
     
-    const contract = await getContract();
-    const amountInWei = ethers.parseEther(amount.toString());
-    const tx = await contract.transferFrom(from, to, amountInWei);
-    await tx.wait();
-    return tx;
+    try {
+        const contract = await getContract();
+        console.log("Transferring tokens:", {
+            from,
+            to,
+            amount
+        });
+        
+        // First approve the transfer
+        const amountInWei = ethers.parseEther(amount.toString());
+        const approveTx = await contract.approve(to, amountInWei);
+        await approveTx.wait();
+        
+        // Then do the transfer
+        const transferTx = await contract.transfer(to, amountInWei);
+        await transferTx.wait();
+        
+        return transferTx;
+    } catch (error) {
+        console.error("Transfer failed:", error);
+        throw error;
+    }
 }
 
 export {mint,burn,transfer};
